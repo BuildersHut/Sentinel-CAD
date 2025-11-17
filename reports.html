@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDT - Reports</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="RHPD.png" type="image/png">
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Sentinel CAD</h2>
+  <p>Note: if you would like to show friends, I would recommend screenshotting the reports since Citations DO NOT SAVE.</p>
+  <a href="index.html"><button>Units</button></a>
+  <a href="calls.html"><button>Calls</button></a>
+  <a href="bolos.html"><button>BOLOs</button></a>
+  <a href="radio.html"><button>Radio</button></a>
+  <a href="reports.html"><button class="active">Reports</button></a>
+  <a href="registry.html"><button>Registry</button></a>
+</div>
+
+<div class="content">
+  <h1>Report Management</h1>
+
+<a href="arrest-report-edit.html"><button class="create-btn" onclick="newArrestReport()">Create New Arrest Report</button></a>
+<a href="citation-report-edit.html"><button class="create-btn" onclick="newCitation()">Create New Citation Report</button></a>
+
+  <h2>Report Log</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Case #</th>
+        <th>Suspect/Violator</th>
+        <th>Date</th>
+        <th>View</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id="reportTable"></tbody>
+  </table>
+</div>
+
+<script src="report-functions.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadArrestReports();
+    loadCitations();
+});
+</script>
+</body>
+</html>

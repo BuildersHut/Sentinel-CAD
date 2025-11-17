@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDT - Units</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="RHPD.png" type="image/png">
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Sentinel CAD</h2>
+    <a href="index.html"><button class="active">Units</button></a>
+    <a href="calls.html"><button>Calls</button></a>
+    <a href="bolos.html"><button>BOLOs</button></a>
+    <a href="radio.html"><button>Radio</button></a>
+    <a href="reports.html"><button>Reports</button></a>
+    <a href="registry.html"><button>Registry</button></a>
+     <button onclick="clearDatabase()" style="margin-top:20px; background-color:#d9534f;">Clear Database</button>
+  </div>
+
+  <div class="content">
+    <h1>Unit Management System</h1>
+
+    <div class="unit-form">
+      <input type="text" id="unitId" placeholder="Unit ID (e.g., 1A-12)">
+      <input type="text" id="unitName" placeholder="Officer Name">
+      <select id="unitStatus">
+        <option value="Available">Available</option>
+        <option value="Busy">Busy</option>
+        <option value="En Route">En Route</option>
+        <option value="On Scene">On Scene</option>
+        <option value="10-7 (Out of Service)">10-7 (Out of Service)</option>
+      </select>
+      <button onclick="addUnit()">Add Unit</button>
+    </div>
+
+    <h2>Active Units</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Unit ID</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Update</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody id="unitTable"></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

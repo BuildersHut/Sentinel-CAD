@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDT - Registry</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="RHPD.png" type="image/png">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #0d0d0d; color: #f0f0f0; }
+        h1 { text-align: center; color: #00ffcc; }
+        .tab-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; background: #2a2a2a; margin: 0 5px; border-radius: 5px 5px 0 0; }
+        .tab.active { background: #00ccff; color: #1e1e1e; font-weight: bold; }
+        .search-section { background: #0d0d0d; padding: 15px; border-radius: 0 8px 8px 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: none; }
+        .search-section.active { display: block; }
+        .search-section h2 { margin-top: 0; color: #00ccff; }
+        .search-section input { width: 80%; padding: 5px; margin-right: 5px; background: #1e1e1e; border: 1px solid #555; color: #f0f0f0; }
+        .search-section button { padding: 5px 10px; background: #00ccff; border: none; color: #1e1e1e; cursor: pointer; }
+        #results { background: #2b2b2b; padding: 15px; border-radius: 8px; }
+        .alert { color: #ff5555; font-weight: bold; }
+        .warn { color: #ffaa00; font-weight: bold; }
+        .clear { color: #55ff55; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Sentinel CAD</h1>
+
+      <div class="sidebar">
+    <a href="index.html"><button>Units</button></a>
+    <a href="calls.html"><button>Calls</button></a>
+    <a href="bolos.html"><button>BOLOs</button></a>
+    <a href="radio.html"><button>Radio</button></a>
+    <a href="reports.html"><button>Reports</button></a>
+    <a href="registry.html"><button class="active">Registry</button></a>
+  </div>
+
+    <div class="tab-container">
+        <div class="tab active" onclick="showTab('person')">People</div>
+        <div class="tab" onclick="showTab('vehicle')">Vehicles</div>
+    </div>
+
+    <div id="person" class="search-section active">
+        <h2>Person Search</h2>
+        <input type="text" id="searchInput" placeholder="John Doe">
+        <button onclick="searchPerson()">Search</button>
+    </div>
+
+    <div id="vehicle" class="search-section">
+        <h2>Vehicle Search</h2>
+        <input type="text" id="vehicleInput" placeholder="ABC123">
+        <button onclick="searchVehicle()">Search</button>
+    </div>
+
+    <div id="results"><h2>Search Results</h2></div>
+
+<script>
+const personDatabase = [
+    { name: "John Doe", dob: "01/12/1990", address: "124 Main Street", warrants: "None", priors: ["Speeding (2021)", "Disorderly Conduct (2023)"] },
+    { name: "Sarah Collins", dob: "04/22/1987", address: "55 Oak Avenue", warrants: "Active Warrant - Failure to Appear", priors: ["Reckless Driving (2022)"] },
+    { name: "Jackson Wilson", dob: "08/20/2012", address: "41 Jaker Street", warrants: "Active Warrant - Attempting to Elude Police", priors: ["Armed Robbery (29/02/2018)"] },
+    { name: "Emily Davis", dob: "05/15/1995", address: "202 Birch Road", warrants: "None", priors: ["DUI (12/11/2016)", "Public Intoxication (23/06/2019)"] },
+    { name: "Daniel Martinez", dob: "09/30/1985", address: "303 Cedar Street", warrants: "Active Warrant - Burglary", priors: ["Theft (05/05/2010)", "Vandalism (14/08/2013)"] },
+    { name: "Olivia Johnson", dob: "11/25/1992", address: "78 Pine Lane", warrants: "None", priors: ["Assault (17/03/2015)"] },
+    { name: "Michael Brown", dob: "02/14/1980", address: "99 Maple Drive", warrants: "None", priors: ["Drug Possession (22/07/2011)", "Resisting Arrest (30/09/2014)"] },
+    { name: "Sophia Lee", dob: "07/08/2000", address: "150 Spruce Street", warrants: "None", priors: ["Shoplifting (10/12/2018)"] },
+    { name: "James Smith", dob: "03/03/1975", address: "200 Elm Street", warrants: "Active Warrant - Domestic Violence", priors: ["Domestic Violence (15/04/2005)", "Probation Violation (20/10/2008)"] },
+];
+
+const vehicleDatabase = [
+            { plate: "ABC123", owner: "John Doe", make: "Ford", model: "F-150", year: 2018, status: "Clear" },
+            { plate: "XYZ789", owner: "Jane Smith", make: "Toyota", model: "Camry", year: 2020, status: "Expired Registration" },
+            { plate: "LMN456", owner: "Michael Brown", make: "Honda", model: "Civic", year: 2015, status: "No Insurance" },
+            { plate: "QRS321", owner: "No Owner", make: "Chevrolet", model: "Malibu", year: 2017, status: "No Registration, No Insurance" },
+            { plate: "TUV654", owner: "Emily Davis", make: "Nissan", model: "Altima", year: 2016, status: "Clear" },
+            { plate: "GHI987", owner: "Daniel Martinez", make: "Jeep", model: "Wrangler", year: 2019, status: "Clear" },
+            { plate: "JKL321", owner: "Olivia Johnson", make: "Subaru", model: "Outback", year: 2021, status: "Expired Registration" },
+            { plate: "MNO654", owner: "Sarah Collins", make: "Volkswagen", model: "Jetta", year: 2014, status: "No Insurance" },
+            { plate: "PQR987", owner: "James Smith", make: "BMW", model: "X5", year: 2018, status: "Clear" },
+        ];
+
+const resultsDiv = document.getElementById("results");
+function appendRecord(html) { resultsDiv.innerHTML = html; }
+
+function colorize(value) {
+    const lower = value.toLowerCase();
+    if (lower.includes("no registration") || lower.includes("no insurance") || lower.includes("no owner")) return `<span class='alert'>${value}</span>`;
+    if (lower.includes("expired")) return `<span class='warn'>${value}</span>`;
+    return `<span class='clear'>${value}</span>`;
+}
+
+function searchPerson() {
+    const q = document.getElementById("searchInput").value.trim().toLowerCase();
+    const r = personDatabase.find(p => p.name.toLowerCase() === q);
+    if (!r) return appendRecord(`<p>No person found.</p>`);
+
+    appendRecord(`
+        <h3>Person Record</h3>
+        <p><b>Name:</b> ${r.name}</p>
+        <p><b>DOB:</b> ${r.dob}</p>
+        <p><b>Address:</b> ${r.address}</p>
+        <p><b>Warrants:</b> ${r.warrants.toLowerCase() !== 'none' ? `<span class='alert'>${r.warrants}</span>` : `<span class='clear'>${r.warrants}</span>`}</p>
+    `);
+}
+
+function searchVehicle() {
+    const q = document.getElementById("vehicleInput").value.trim().toUpperCase();
+    const r = vehicleDatabase.find(v => v.plate === q);
+    if (!r) return appendRecord(`<p>No vehicle found.</p>`);
+
+    appendRecord(`
+        <h3>Vehicle Record</h3>
+        <p><b>Plate:</b> ${r.plate}</p>
+        <p><b>Owner:</b> ${colorize(r.owner)}</p>
+        <p><b>Make:</b> ${r.make}</p>
+        <p><b>Model:</b> ${r.model}</p>
+        <p><b>Year:</b> ${r.year}</p>
+        <p><b>Status:</b> ${colorize(r.status)}</p>
+    `);
+}
+
+function showTab(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.search-section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+</script>
+</body>
+</html>

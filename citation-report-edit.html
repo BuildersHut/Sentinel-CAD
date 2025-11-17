@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citation Report</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="RHPD.png" type="image/png">
+<style>
+body { font-family: 'Times New Roman', serif; margin:20px; background:#fff; color:#000; }
+.report-container { max-width:800px; margin:auto; border:1px solid #000; padding:20px; }
+.report-header { display:flex; align-items:center; margin-bottom:20px; }
+.report-header img { width:100px; height:100px; margin-right:20px; border:1px solid #000; }
+.header-text { flex:1; text-align:center; }
+.header-title { font-size:26px; font-weight:bold; margin-bottom:5px; }
+.section { margin-bottom:20px; border:1px solid #000; padding:10px; }
+.section h2 { margin-top:0; margin-bottom:10px; background:#eee; padding:3px; font-size:16px; border-bottom:1px solid #000; }
+input, textarea, select { width:100%; padding:5px; font-size:14px; margin-bottom:5px; border:1px solid #000; background:#fff; color:#000; }
+textarea { min-height:60px; resize:vertical; }
+button { padding:8px 12px; margin-top:10px; margin-right:10px; border:none; border-radius:4px; background-color:#1f75fe; color:white; cursor:pointer; }
+button:hover { background-color:#559dff; }
+/* Print styles */
+@media print {
+    button, .logo-select { display:none; }
+    body { margin:0; }
+    .report-container { border:none; padding:0; }
+    .section { border:1px solid #000; padding:5px; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="report-container">
+
+    <!-- Logo selector -->
+    <div class="logo-select">
+        <label for="logoSelect">Select Agency Logo:</label>
+        <select id="logoSelect">
+            <option value="lapd.jpg">LAPD</option>
+            <option value="lasd.png">LASD</option>
+            <option value="chp.jpg">CHP</option>
+            <option value="RHPD.png">RHPD</option>
+            <option value="BCSO.png">BCSO</option>
+        </select>
+    </div>
+
+    <!-- Header -->
+    <div class="report-header">
+        <img id="logoImg" src="lapd.jpg" alt="Logo">
+        <div class="header-text">
+            <div class="header-title">CITATION REPORT</div>
+        </div>
+    </div>
+
+    <!-- Citation Info -->
+    <div class="section">
+        <h2>Citation Info</h2>
+        <p><strong>Citation #:</strong> <span id="citationId"></span></p>
+        <p><strong>Date:</strong> <input type="date" id="citationDate"></p>
+    </div>
+
+    <!-- Violator Info -->
+    <div class="section">
+        <h2>Violator Info</h2>
+        <p><strong>Name:</strong> <input type="text" id="violatorName"></p>
+        <p><strong>DOB:</strong> <input type="text" id="violatorDOB"></p>
+        <p><strong>Address:</strong> <input type="text" id="violatorAddress"></p>
+        <p><strong>Vehicle Plate:</strong> <input type="text" id="violatorPlate"></p>
+        <p><strong>Vehicle Make:</strong> <input type="text" id="vehicleMake"></p>
+        <p><strong>Vehicle Model:</strong> <input type="text" id="vehicleModel"></p>
+        <p><strong>Vehicle Year:</strong> <input type="text" id="vehicleYear"></p>
+    </div>
+
+    <!-- Officer Info -->
+    <div class="section">
+        <h2>Issuing Officer Info</h2>
+        <p><strong>Name:</strong> <input type="text" id="officerName"></p>
+        <p><strong>Badge #:</strong> <input type="text" id="badgeNumber"></p>
+        <p><strong>Rank:</strong> <input type="text" id="rank"></p>
+        <p><strong>Unit:</strong> <input type="text" id="unit"></p>
+    </div>
+
+    <!-- Violation Info -->
+    <div class="section">
+        <h2>Violation Info</h2>
+        <p><strong>Violation:</strong></p>
+        <textarea id="violation"></textarea>
+        <p><strong>Fine Amount ($):</strong> <input type="text" id="fineAmount"></p>
+        <p><strong>Location:</strong> <input type="text" id="violationLocation"></p>
+        <p><strong>Notes:</strong></p>
+        <textarea id="notes"></textarea>
+    </div>
+
+    <a href="reports.html"><button onclick="saveReport()">Save Report</button></a>
+    <button onclick="printReport()">Print Report</button>
+    <button onclick="clearReport()">Clear Fields</button>
+    <a href="reports.html"><button>Back</button></a>
+
+</div>
+
+<script src="report-functions.js"></script>
+<script>
+// Auto-generate Citation #
+document.getElementById('citationId').textContent = 'C-' + Math.floor(100000 + Math.random() * 900000);
+const logoSelect = document.getElementById('logoSelect');
+const logoImg = document.getElementById('logoImg');
+
+logoSelect.addEventListener('change', () => {
+    logoImg.src = logoSelect.value;
+});
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const citationIdParam = params.get("id");
+    if (citationIdParam !== null) loadCitationForEdit(citationIdParam);
+});
+
+function loadCitationForEdit(index) {
+    const citations = JSON.parse(localStorage.getItem("citations")) || [];
+    const c = citations[index];
+    if (!c) return;
+
+    document.getElementById("citationId").textContent = c.citationId;
+    document.getElementById("citationDate").value = c.date;
+    document.getElementById("officerName").value = c.officerName;
+    document.getElementById("badgeNumber").value = c.badgeNumber;
+    document.getElementById("rank").value = c.rank;
+    document.getElementById("unit").value = c.unit;
+    document.getElementById("violatorName").value = c.violatorName;
+    document.getElementById("violatorDOB").value = c.violatorDOB;
+    document.getElementById("violatorAddress").value = c.violatorAddress;
+    document.getElementById("violatorPlate").value = c.violatorPlate;
+    document.getElementById("vehicleMake").value = c.vehicleMake;
+    document.getElementById("vehicleModel").value = c.vehicleModel;
+    document.getElementById("vehicleYear").value = c.vehicleYear;
+    document.getElementById("violation").value = c.violation;
+    document.getElementById("fineAmount").value = c.fineAmount;
+    document.getElementById("violationLocation").value = c.violationLocation;
+    document.getElementById("notes").value = c.notes;
+}
+</script>
+
+</body>
+</html>

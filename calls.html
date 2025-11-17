@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDT - Calls</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="RHPD.png" type="image/png">
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Sentinel CAD</h2>
+    <a href="index.html"><button>Units</button></a>
+    <a href="calls.html"><button class="active">Calls</button></a>
+    <a href="bolos.html"><button>BOLOs</button></a>
+    <a href="radio.html"><button>Radio</button></a>
+    <a href="reports.html"><button>Reports</button></a>
+    <a href="registry.html"><button>Registry</button></a>
+  </div>
+
+  <div class="content">
+    <h1>Create a New Call</h1>
+
+    <div class="call-form">
+      <input type="text" id="callId" placeholder="Call ID (auto or custom)">
+      <input type="text" id="callSummary" placeholder="Call Summary / Description">
+      <select id="callUnitSelect" multiple></select>
+      <button onclick="createCall()">Create Call</button>
+    </div>
+
+    <h2>Active Calls</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Call ID</th>
+          <th>Summary</th>
+          <th>Assigned Units</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody id="callsTable"></tbody>
+    </table>
+  </div>
+
+  <script src="calls.js"></script>
+</body>
+</html>
