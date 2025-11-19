@@ -48,7 +48,7 @@
 
     <div id="vehicle" class="search-section">
         <h2>Vehicle Search</h2>
-        <input type="text" id="vehicleInput" placeholder="ABC123">
+        <input type="text" id="vehicleInput" placeholder="ABC1234">
         <button onclick="searchVehicle()">Search</button>
     </div>
 
@@ -68,15 +68,15 @@ const personDatabase = [
 ];
 
 const vehicleDatabase = [
-            { plate: "ABC123", owner: "John Doe", make: "Ford", model: "F-150", year: 2018, status: "Clear" },
-            { plate: "XYZ789", owner: "Jane Smith", make: "Toyota", model: "Camry", year: 2020, status: "Expired Registration" },
-            { plate: "LMN456", owner: "Michael Brown", make: "Honda", model: "Civic", year: 2015, status: "No Insurance" },
-            { plate: "QRS321", owner: "No Owner", make: "Chevrolet", model: "Malibu", year: 2017, status: "No Registration, No Insurance" },
-            { plate: "TUV654", owner: "Emily Davis", make: "Nissan", model: "Altima", year: 2016, status: "Clear" },
-            { plate: "GHI987", owner: "Daniel Martinez", make: "Jeep", model: "Wrangler", year: 2019, status: "Clear" },
-            { plate: "JKL321", owner: "Olivia Johnson", make: "Subaru", model: "Outback", year: 2021, status: "Expired Registration" },
-            { plate: "MNO654", owner: "Sarah Collins", make: "Volkswagen", model: "Jetta", year: 2014, status: "No Insurance" },
-            { plate: "PQR987", owner: "James Smith", make: "BMW", model: "X5", year: 2018, status: "Clear" },
+            { plate: "ABC1234", owner: "John Doe", make: "Ford", model: "F-150", year: 2018, status: "Clear" },
+            { plate: "XYZ2868", owner: "Jane Smith", make: "Toyota", model: "Camry", year: 2020, status: "Expired Registration" },
+            { plate: "LMN4018", owner: "Michael Brown", make: "Honda", model: "Civic", year: 2015, status: "No Insurance" },
+            { plate: "QRS9152", owner: "No Owner", make: "Chevrolet", model: "Malibu", year: 2017, status: "No Registration, No Insurance" },
+            { plate: "TUV4821", owner: "Emily Davis", make: "Nissan", model: "Altima", year: 2016, status: "Clear" },
+            { plate: "GHI9375", owner: "Daniel Martinez", make: "Jeep", model: "Wrangler", year: 2019, status: "Clear" },
+            { plate: "JKL1048", owner: "Olivia Johnson", make: "Subaru", model: "Outback", year: 2021, status: "Expired Registration" },
+            { plate: "MNO5729", owner: "Sarah Collins", make: "Volkswagen", model: "Jetta", year: 2014, status: "No Insurance" },
+            { plate: "PQR6612", owner: "James Smith", make: "BMW", model: "X5", year: 2018, status: "Clear" },
         ];
 
 const resultsDiv = document.getElementById("results");
@@ -94,12 +94,18 @@ function searchPerson() {
     const r = personDatabase.find(p => p.name.toLowerCase() === q);
     if (!r) return appendRecord(`<p>No person found.</p>`);
 
+        const priorsList = r.priors.length > 0
+        ? r.priors.map(p => `<li>${p}</li>`).join("")
+        : "<li>None</li>";
+
     appendRecord(`
         <h3>Person Record</h3>
         <p><b>Name:</b> ${r.name}</p>
         <p><b>DOB:</b> ${r.dob}</p>
         <p><b>Address:</b> ${r.address}</p>
         <p><b>Warrants:</b> ${r.warrants.toLowerCase() !== 'none' ? `<span class='alert'>${r.warrants}</span>` : `<span class='clear'>${r.warrants}</span>`}</p>
+        <p><b>Priors:</b></p>
+        <ul>${priorsList}</ul>
     `);
 }
 
